@@ -1,0 +1,24 @@
+# 1. Define Variables
+$resourceGroup = "FreeTrialRG"
+$location = "eastus" # Ensure your free trial credits apply to this region
+$vmName = "WinServer2022VM"
+$cred = Get-Credential # Enter the username and password for the VM when prompted
+
+# 2. Create a Resource Group
+New-AzResourceGroup -Name $resourceGroup -Location $location
+
+# 3. Create the VM
+# Note: Using 'Standard_B2ats_v2' or 'Standard_B1s' to stay within free limits.
+# Image: MicrosoftWindowsServer:WindowsServer:2022-datacenter-azure-edition:latest
+New-AzVm `
+    -ResourceGroupName $resourceGroup `
+    -Name $vmName `
+    -Location $location `
+    -Image "MicrosoftWindowsServer:WindowsServer:2022-datacenter-azure-edition:latest" `
+    -Size "Standard_B2ats_v2" `
+    -Credential $cred `
+    -PublicIpAddressName "myPublicIP" `
+    -VirtualNetworkName "myVnet" `
+    -SubnetName "mySubnet" `
+    -SecurityGroupName "myNSG" `
+    -OpenPorts 3389 # Opens RDP port for remote access
